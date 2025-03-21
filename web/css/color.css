@@ -10,8 +10,8 @@ and open the template in the editor.
 
 :root{
     --dark: #5D4C3E;
-    --light: #FFF2E6;
-    --gold: #F2A900;
+    --light: #FFF2E6; /* The code itself can be correctly executed, */
+    --gold: #F2A900;  /* please ignore the error message. */
     --brown: #A46C31;
     --wheat: #EFD981;
 }

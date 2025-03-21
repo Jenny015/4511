@@ -15,27 +15,3 @@ body{
     background-size: cover; /* or 'contain' */
     background-repeat: no-repeat; /* Prevents the image from repeating */
 }
-
-h1{
-    color: var(--dark);
-    text-shadow: 2px 2px 5px white;
-}
-
-.center{
-    text-align: center;
-}
-
-#box{
-    border: 1px solid black;
-    width: 50%;
-    margin: auto auto;
-}
-
-table{
-    width: 50%;
-    margin: auto auto;
-}
-
-table > input{
-    font-size: 120%;
-}
