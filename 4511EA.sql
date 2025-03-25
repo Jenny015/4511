@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： localhost
--- 產生時間： 2025 年 03 月 20 日 14:12
+-- 產生時間： 2025 年 03 月 25 日 04:44
 -- 伺服器版本： 10.4.28-MariaDB
 -- PHP 版本： 8.2.4
 
@@ -20,6 +20,24 @@ SET time_zone = "+00:00";
 --
 -- 資料庫： `4511EA`
 --
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `Emp`
+--
+
+CREATE TABLE `Emp` (
+  `empID` varchar(5) NOT NULL,
+  `pwd` varchar(16) NOT NULL,
+  `lname` varchar(50) NOT NULL,
+  `fname` varchar(50) NOT NULL,
+  `phone` char(8) NOT NULL,
+  `role` char(1) NOT NULL,
+  `city` varchar(3) NOT NULL,
+  `locID` varchar(5) DEFAULT NULL,
+  `eStatus` char(1) DEFAULT 'A'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -41,7 +59,7 @@ CREATE TABLE `Fruit` (
 CREATE TABLE `Inventory` (
   `locID` varchar(5) NOT NULL,
   `fruitID` int(3) NOT NULL,
-  `qty` int(9) NOT NULL
+  `qty` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -52,8 +70,9 @@ CREATE TABLE `Inventory` (
 
 CREATE TABLE `Location` (
   `locID` varchar(5) NOT NULL,
-  `city` varchar(3) NOT NULL,
-  `type` char(1) NOT NULL
+  `type` char(1) NOT NULL,
+  `Address` varchar(255) NOT NULL,
+  `locName` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -64,10 +83,10 @@ CREATE TABLE `Location` (
 
 CREATE TABLE `Transfer` (
   `transferID` varchar(22) NOT NULL,
-  `from` varchar(5) NOT NULL,
-  `to` varchar(5) NOT NULL,
-  `status` char(1) NOT NULL,
-  `arrivalDate` date DEFAULT NULL
+  `fromLoc` varchar(5) NOT NULL,
+  `toLoc` varchar(5) NOT NULL,
+  `tStatus` varchar(10) NOT NULL,
+  `estArrial` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -79,29 +98,19 @@ CREATE TABLE `Transfer` (
 CREATE TABLE `TransferQty` (
   `transferID` varchar(22) NOT NULL,
   `fruitID` int(3) NOT NULL,
-  `qty` int(9) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- 資料表結構 `User`
---
-
-CREATE TABLE `User` (
-  `userID` varchar(6) NOT NULL,
-  `pwd` varchar(16) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `phone` varchar(8) NOT NULL,
-  `role` char(1) NOT NULL,
-  `city` varchar(3) NOT NULL,
-  `locID` varchar(5) DEFAULT NULL,
-  `status` char(1) NOT NULL
+  `qty` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 已傾印資料表的索引
 --
+
+--
+-- 資料表索引 `Emp`
+--
+ALTER TABLE `Emp`
+  ADD PRIMARY KEY (`empID`),
+  ADD KEY `fk_EmpLocation` (`locID`);
 
 --
 -- 資料表索引 `Fruit`
@@ -127,8 +136,8 @@ ALTER TABLE `Location`
 --
 ALTER TABLE `Transfer`
   ADD PRIMARY KEY (`transferID`),
-  ADD KEY `fk_Transfer1` (`from`),
-  ADD KEY `fk_Transfer2` (`to`);
+  ADD KEY `fk_Transfer1` (`fromLoc`),
+  ADD KEY `fk_Transfer2` (`toLoc`);
 
 --
 -- 資料表索引 `TransferQty`
@@ -138,15 +147,14 @@ ALTER TABLE `TransferQty`
   ADD KEY `fk_TransferTransferQty` (`transferID`);
 
 --
--- 資料表索引 `User`
---
-ALTER TABLE `User`
-  ADD PRIMARY KEY (`userID`),
-  ADD KEY `fk_UserLocation` (`locID`);
-
---
 -- 已傾印資料表的限制式
 --
+
+--
+-- 資料表的限制式 `Emp`
+--
+ALTER TABLE `Emp`
+  ADD CONSTRAINT `fk_EmpLocation` FOREIGN KEY (`locID`) REFERENCES `Location` (`locID`);
 
 --
 -- 資料表的限制式 `Inventory`
@@ -159,8 +167,8 @@ ALTER TABLE `Inventory`
 -- 資料表的限制式 `Transfer`
 --
 ALTER TABLE `Transfer`
-  ADD CONSTRAINT `fk_Transfer1` FOREIGN KEY (`from`) REFERENCES `Location` (`locID`),
-  ADD CONSTRAINT `fk_Transfer2` FOREIGN KEY (`to`) REFERENCES `Location` (`locID`);
+  ADD CONSTRAINT `fk_Transfer1` FOREIGN KEY (`fromLoc`) REFERENCES `Location` (`locID`),
+  ADD CONSTRAINT `fk_Transfer2` FOREIGN KEY (`toLoc`) REFERENCES `Location` (`locID`);
 
 --
 -- 資料表的限制式 `TransferQty`
@@ -168,12 +176,6 @@ ALTER TABLE `Transfer`
 ALTER TABLE `TransferQty`
   ADD CONSTRAINT `fk_FruitTransferQty` FOREIGN KEY (`fruitID`) REFERENCES `Fruit` (`fruitID`),
   ADD CONSTRAINT `fk_TransferTransferQty` FOREIGN KEY (`transferID`) REFERENCES `Transfer` (`transferID`);
-
---
--- 資料表的限制式 `User`
---
-ALTER TABLE `User`
-  ADD CONSTRAINT `fk_UserLocation` FOREIGN KEY (`locID`) REFERENCES `Location` (`locID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
