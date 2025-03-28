@@ -19,9 +19,9 @@
         <div>
             <br>
             <table>
-                <form method="post" action="login">
-                    <input type='hidden' name='action' value='login'>
-                    <tr><td><b>User ID</b></td><td><input type="text" name="userid"></td></tr>
+                <form method="get" action="login">
+                    <input type="hidden" name="action" value="login">
+                    <tr><td><b>User ID</b></td><td><input type="text" name="empid"></td></tr>
                     <tr><td><b>Password</b></td><td><input type="password" name="pwd"></td></tr>
                     <tr><td colspan="2"><input type="submit" value="Login"></td></tr>
                 </form>
